@@ -1,10 +1,11 @@
 {
-  "name": "pro",
+  "name": "tm",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "TM",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "none",
+    "start": "node server.js"
   },
   "author": "",
   "license": "ISC",
