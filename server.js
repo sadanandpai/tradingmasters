@@ -13,7 +13,7 @@ app.get("/", function(req, res){
 });
 
 
-var data = [];
+var data = [{"stockName":"TCS","buyPrice":"1800","stopLoss":"1700","target":"2000"},{"stockName":"ACC","buyPrice":"1000","stopLoss":"900","target":"1500"},{"stockName":"LTI","buyPrice":"800","stopLoss":"500","target":"2000"},{"stockName":"3MINDIA","buyPrice":"20000","stopLoss":"19000","target":"25000"},{"stockName":"AEGISCHEM","buyPrice":"250","stopLoss":"200","target":"300"}];
 app.get('/rest/',function(req, res){
     res.status(200).send(data);
 })
