@@ -15,7 +15,7 @@ angular.module('stockEdit').component('stockEdit', {
             });
 
             this.submit = function() {
-                $http.put("/rest/", {
+                $http.put("rest/", {
                     index: self.stock.index,
                     buyPrice: self.stock.buyPrice,
                     stopLoss: self.stock.stopLoss,

@@ -8,7 +8,7 @@ angular.module('stockAdd').component('stockAdd', {
             });
 
             this.submit = function() {
-                $http.post("/rest/", {
+                $http.post("rest/", {
                     stockName: self.stockName, 
                     buyPrice: self.buyPrice,
                     stopLoss: self.stopLoss,

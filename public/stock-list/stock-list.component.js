@@ -10,7 +10,7 @@ angular.module('stockList')
             self.errorMsg = 'No data found';
 
             this.deleteStock = function deleteStock(index){
-                $http.delete("/rest/"+index).then(
+                $http.delete("rest/"+index).then(
                     function(response){
                         self.stocks.splice(index, 1);
                     }
@@ -22,7 +22,7 @@ angular.module('stockList')
                 $window.location.href = '#!/stocks/editStock/' + stock.stockName;
             }
 
-            $http.get("/rest/").then(
+            $http.get("rest/").then(
                 function(response){
                     self.stocks = response.data;
                 }
