@@ -1,194 +1,28 @@
+<html ng-app="homeApp">
 
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Trading Masters</title>
-	<meta charset="utf-8">
-  	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/css/materialize.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.1/js/materialize.min.js"></script>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+    <head>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css" />
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.5/angular.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.7.5/angular-route.min.js"></script>
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" rel="stylesheet">
 
-     <script type="text/javascript">
-        $(document).ready(function(){
-            $(".button-collapse").sideNav({
-                menuWidth: 250, // Default is 300
-                edge: 'left', // Choose the horizontal origin
-                closeOnClick: true, // Closes side-nav on <a> clicks, useful for Angular/Meteor
-                draggable: false // Choose whether you can drag to open on touch screens
-            });
-            $('.modal').modal();
-            });
-    </script>
-    <style>
-      .container {
-        margin: 0 auto;
-        max-width: 1280px;
-        width: 90%;
-      }
-    </style>
-</head>
+        <link rel="stylesheet" href="res/style.css" />
+        <script src="home.module.js"></script>
+        <script src="home.config.js"></script>
+        <script src="stock-list/stock-list.module.js"></script>
+        <script src="stock-list/stock-list.component.js"></script>
+        <script src="stock-add/stock-add.module.js"></script>
+        <script src="stock-add/stock-add.component.js"></script>
+        <script src="stock-edit/stock-edit.module.js"></script>
+        <script src="stock-edit/stock-edit.component.js"></script>
+        <script src="core/core.module.js"></script>
+        <script src="core/core.component.js"></script>
+    </head>
 
-<body ng-app="myApp" ng-controller="myCtrl" ng-init="edited = 0">
+        <br/>
+        <div ng-view class="container">    
+        </div>
 
-	<div class="container">		
-		<table class="responsive-table">
-			<thead>
-				<tr>
-					<th>Index</th>
-					<th>StockName</th>
-					<th>BuyPrice</th>
-					<th>Stoploss</th>
-					<th>Target</th>
-					<th>CurrentPrice</th>
-					<th>P & L</th>
-					<th><a data-target="modal1" class="btn-floating btn-small waves-effect waves-light red modal-trigger"><i class="material-icons">add</i></a></th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr ng-repeat="stock in stocks" ng-class="stock.buyPrice < stock.currentPrice ? '#69f0ae green accent-2' : '#ffb74d orange lighten-2'">
-					<td>{{$index+1}}</td>
-					<td><strong>{{stock.stockName}}</strong></td>
-					<td>{{stock.buyPrice}}</td>
-					<td>{{stock.stopLoss}}</td>
-					<td>{{stock.target}}</td>
-					<td>{{stock.currentPrice}}</td>
-					<td><strong>{{ ((stock.currentPrice - stock.buyPrice) * 100 / stock.buyPrice) | number:2 }}%</strong></td>
-					<td><a class="btn-floating btn-small waves-effect waves-light red"><i class="material-icons" ng-click="delete($index)">delete</i></a></td>
-				</tr>
-				
-			</tbody>
-		</table>
-
-
-		<div id="modal1" class="modal bottom-sheet">
-		    <div class="modal-content">
-		    	<h4>Add stock</h4>
-		        <div class="row">
-	        		<div class="col s12 m12">
-	        			<div class="input-field inline">
-							<div ng-include="'stockList.html'"></div>
-						</div>
-						<div class="input-field inline">
-							<input id="buyPrice" type="text" name="buyPrice" required="yes" maxlength="20">
-							<label for="buyPrice">BuyPrice</label>
-						</div>
-						<div class="input-field inline">
-							<input id="stopLoss" type="text" name="stopLoss" required="yes" maxlength="20">
-							<label for="stopLoss">Stoploss</label>
-						</div>
-	        			<div class="input-field inline">
-							<input id="target" type="email" name="target" required="yes" maxlength="50">
-							<label for="target">Target</label>
-						</div>
-						<div class="input-field inline">
-							<input id="currentPrice" type="text" name="currentPrice" required="yes" readonly ="readonly" style="color:black" placeholder="Price">
-						</div>
-						<div class="input-field inline">
-	                		<input type="button" class="waves-effect waves-light btn blue" ng-click="addStock()" value="Add stock">
-	                	</div>
-					</div>
-			    </div>
-			</div>
-		</div>
-
-	</div>
-
-	<script type="text/javascript">
-		var app = angular.module('myApp', []);
-		app.controller('myCtrl', function($scope, $http) {
-
-		 	// new changes		
-			$scope.delete= function(index){
-				var message= confirm('Are you sure you want to delete this stock?');
-			    if (message) {
-					$http({
-					        method : "DELETE",
-					        url : "/rest/" + index
-
-					    }).then(function mySuccess(response) {
-						    if(response.data == "Ok"){
-						    	Materialize.toast('Stock deleted', 4000);
-						    	$scope.refresh();
-						    }
-					    }, function myError(response) {
-					        alert(response.statusText);
-					    });
-
-				} else {
-					Materialize.toast('Changed mind', 2000);
-				}
-			   
-            }
-
-
-             $scope.addStock = function(){
-			    if($('#stockName').val() != "" && $('#buyPrice').val() != "" && $('#stoploss').val() != "" && $('#target').val() != "" && $('#currentPrice').val() != ""){
-
-			    		$http({
-					        method : "POST",
-					  		data: {	
-					  				'stockName': $('#stockName').val(), 
-					  				'buyPrice': $('#buyPrice').val(), 
-					  				'stopLoss': $('#stopLoss').val(), 
-					  				'target': $('#target').val()
-					  			},
-					        url : "/rest/"
-
-					    }).then(function mySuccess(response) {
-						    if(response.data == "Ok"){
-						    	Materialize.toast('Stock details for id added', 4000);
-								$scope.refresh();
-								$('#stockName').val("");
-								$('#buyPrice').val("");
-								$('#stopLoss').val("");
-								$('#target').val("");
-								$('#modal1').modal('close');
-						    }
-					    }, function myError(response) {
-					        alert(response.statusText);
-					    });
-				}
-				else{
-					Materialize.toast('Fill all the fields to continue', 4000);
-				}
-			    
-			}
-
-            $scope.refresh= function(){
-            	$http.get("/rest/").then(function(response) {
-			  		$scope.stocks = response.data;
-			  		$scope.fetchAllStockPrice();
-			    });
-			}
-			
-
-			$scope.fetchStockPrice = function(){
-				$http.get("https://www.quandl.com/api/v3/datasets/NSE/" + $('#stockName').val() + ".json?api_key=gwZhGszfyS5bH7p44UfA&rows=1").
-					then(response => {
-	                    $('#currentPrice').val(response.data.dataset.data[0][4]);
-	                })
-			}
-
-
-			$scope.fetchAllStockPrice = function(){
-				var apiGen = (name) => { return `https://www.quandl.com/api/v3/datasets/NSE/${name}.json?api_key=gwZhGszfyS5bH7p44UfA&rows=1`; }
-
-		        for(let i = 0; i < $scope.stocks.length; i++ ){
-		            setTimeout(function() { 
-		                $http.get(apiGen($scope.stocks[i].stockName)).then(response => {
-		                    $scope.stocks[i].currentPrice = response.data.dataset.data[0][4];
-		                })
-		            }, i * 1000);
-		        }
-			}
-			
-			$scope.refresh();
-		});
-     
-	</script>
-
-</body>
+    
 </html>

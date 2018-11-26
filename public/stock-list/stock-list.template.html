@@ -1,0 +1,57 @@
+<div class="row">
+    <div class="col-md-4">
+        <input type="text" type="search" class="form-control" placeholder="Search" ng-model="$ctrl.search" />
+    </div>
+
+    <div class="col-md-8 text-right">
+        <a href="#!/stocks/addStock" class="btn btn-primary" role="button">Add a stock</a>
+    </div>
+</div>
+<br/>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Index</th>
+            <th scope="col" classs="text-right" ng-click="$ctrl.sort='stockName'; $ctrl.reverse=!$ctrl.reverse">
+                StockName
+                <span class="oi oi-sort-ascending" ng-show="$ctrl.sort=='stockName' && !$ctrl.reverse" ng-class="{reverse: $ctrl.reverse}"></span>
+                <span class="oi oi-sort-descending" ng-show="$ctrl.sort=='stockName' && $ctrl.reverse" ng-class="{reverse: $ctrl.reverse}"></span>
+            </th>
+            <th scope="col">BuyPrice</th>
+            <th scope="col">Stoploss</th>
+            <th scope="col">Target</th>
+            <th scope="col">Current Price</th>
+            <th scope="col" ng-click="$ctrl.sort='profit'; $ctrl.reverse=!$ctrl.reverse">
+                P & L
+                <span class="oi oi-sort-ascending" ng-show="$ctrl.sort=='profit' && !$ctrl.reverse" ng-class="{reverse: $ctrl.reverse}"></span>
+                <span class="oi oi-sort-descending" ng-show="$ctrl.sort=='profit' && $ctrl.reverse" ng-class="{reverse: $ctrl.reverse}"></span>
+            </th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td ng-if="$ctrl.load" colspan="6" align="center">
+                <div class="loader"></div>
+            </td>
+        </tr>
+        <tr ng-if="!$ctrl.load && !$ctrl.stocks.length">
+            <td colspan="2">{{$ctrl.errorMsg}}</td>
+        </tr>
+        <tr ng-repeat="stock in $ctrl.stocks | filter:$ctrl.search | orderBy: $ctrl.sort : $ctrl.reverse" >
+            <th scope="row">{{$index+1}}</td>
+            <td>{{stock.stockName}}</td>
+            <td>{{stock.buyPrice}}</td>
+            <td>{{stock.stopLoss}}</td>
+            <td>{{stock.target}}</td>
+            <td>{{stock.currentPrice}}</td>
+            <td ng-class="stock.profit > 0 ? 'text-success' : 'text-danger'">{{ stock.profit | number:2 }}%</td>
+            <td>
+                <a href="" ng-click="$ctrl.editStock(stock)"><span class="oi oi-pencil" title="edit" aria-hidden="true"></span></a>&nbsp;&nbsp;&nbsp;
+                <a href="" ng-click="$ctrl.deleteStock(stock.index)"><span class="oi oi-trash" title="delete" aria-hidden="true"></span></a>
+            </td>
+        </tr>
+        
+    </tbody>
+</table>
