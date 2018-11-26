@@ -25,6 +25,15 @@ app.post('/rest/',function(req, res){
 })
 
 
+app.put('/rest/',function(req, res){
+    var index = req.body.index;
+    data[index].buyPrice = req.body.buyPrice;
+    data[index].stopLoss = req.body.stopLoss;
+    data[index].target = req.body.target;
+    res.status(200).send("Ok");
+})
+
+
 app.delete('/rest/:index',function(req, res){
     data.splice(req.params.index, 1);
     res.status(200).send("Ok");
