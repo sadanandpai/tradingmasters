@@ -1,10 +1,26 @@
 .loader {
+    position: absolute;
     border: 10px solid #f3f3f3; /* Light grey */
-    border-top: 10px solid #071016; /* Blue */
+    border-top: 10px solid #007bff; /* Blue */
     border-radius: 50%;
     width: 80px;
     height: 80px;
     animation: spin 1s linear infinite;
+    left: 50%;
+    top: 40%;    
+}
+
+.loader-light {
+    position: absolute;
+    border: 10px solid #f3f3f3; /* Light grey */
+    border-top: 10px solid #007bff; /* Blue */
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    animation: spin 1s linear infinite;
+    opacity: 0.3;
+    left: 50%;
+    top: 40%;    
 }
 
 @keyframes spin {

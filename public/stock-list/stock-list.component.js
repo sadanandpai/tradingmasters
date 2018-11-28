@@ -1,16 +1,17 @@
 angular.module('stockList')
     .component('stockList', {
         templateUrl: 'stock-list/stock-list.template.html',
-        controller: ['$http', '$window', 'stockData', function StockListController($http, $window, stockData){
+        controller: ['$scope', '$http', '$window', 'stockData', function StockListController($scope, $http, $window, stockData){
             var self = this;
             self.load = true;
             self.stocks = [];
             self.sort = 'profit';
             self.reverse = true;
             self.errorMsg = 'No data found';
+            self.opacity = "loader";
 
             this.deleteStock = function deleteStock(index){
-                $http.delete("rest/"+index).then(
+                $http.delete("https://tradingmasters.herokuapp.com/rest/"+index).then(
                     function(response){
                         self.stocks.splice(index, 1);
                     }
@@ -22,13 +23,15 @@ angular.module('stockList')
                 $window.location.href = '#!/stocks/editStock/' + stock.stockName;
             }
 
-            $http.get("rest/").then(
+            
+            $http.get("https://tradingmasters.herokuapp.com/rest/").then(
                 function(response){
                     self.stocks = response.data;
                 }
             ).then(function loadCurrentPrice(){
-                    self.stocks.forEach((stock, index) => {          
-                        $http.get("https://www.quandl.com/api/v3/datasets/NSE/" + stock.stockName + ".json?api_key=gwZhGszfyS5bH7p44UfA&rows=1").then(
+                    var promises = [];
+                    self.stocks.forEach(function(stock, index) {          
+                        promises.push($http.get("https://www.quandl.com/api/v3/datasets/NSE/" + stock.stockName + ".json?api_key=gwZhGszfyS5bH7p44UfA&rows=1").then(
                             function(response){
                                 stock.currentPrice = response.data.dataset.data[0][4];
                                 stock.profit = (stock.currentPrice - stock.buyPrice) * 100 / stock.buyPrice;
@@ -37,9 +40,15 @@ angular.module('stockList')
                             function(response){
                                 stock.currentPrice = "Error";
                             }
-                        )
+                        ));
                     });
-                    self.load = false;  
+                    
+                    Promise.all(promises).then(function(){
+                        self.load = false;
+                        $scope.$apply();
+                    });
+
+                    self.opacity = "loader-light";
                 }
             ).catch(function(){
                 self.errorMsg = "Error while retriving data";
