@@ -60,6 +60,4 @@
         </tbody>
     </table>
     
-    <span ng-if="$ctrl.stockLength > 4">
     <ul uib-pagination total-items="$ctrl.stockLength" items-per-page="4" ng-model="$ctrl.currentPage" ng-change="$ctrl.setPage()" max-size="5" class="pagination-sm" boundary-link-numbers="true"></ul>
-    </span>
