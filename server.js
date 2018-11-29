@@ -13,7 +13,7 @@ app.get("/", function(req, res){
 });
 
 
-var data = [{"stockName":"TCS","buyPrice":"1800","stopLoss":"1700","target":"2000"},{"stockName":"ACC","buyPrice":"1000","stopLoss":"900","target":"1500"},{"stockName":"LTI","buyPrice":"800","stopLoss":"500","target":"2000"},{"stockName":"3MINDIA","buyPrice":"20000","stopLoss":"19000","target":"25000"},{"stockName":"AEGISCHEM","buyPrice":"250","stopLoss":"200","target":"300"}];
+var data = [{"stockName":"TCS","buyPrice":"1800","stopLoss":"1700","target":"2000"},{"stockName":"ACC","buyPrice":"1000","stopLoss":"900","target":"1500"},{"stockName":"LTI","buyPrice":"800","stopLoss":"500","target":"2000"},{"stockName":"3MINDIA","buyPrice":"20000","stopLoss":"19000","target":"25000"},{"stockName":"AEGISCHEM","buyPrice":"250","stopLoss":"200","target":"300"},{"stockName":"AGCNET","buyPrice":"72","stopLoss":"64","target":"80"},{"stockName":"GLOBOFFS","buyPrice":"15","stopLoss":"12","target":"20"},{"stockName":"HAVELLS","buyPrice":"650","stopLoss":"640","target":"720"},{"stockName":"ADANIPOWER","buyPrice":"52","stopLoss":"80","target":"50"},{"stockName":"GODREJCP","buyPrice":"900","stopLoss":"700","target":"1500"}];
 app.get('/rest/',function(req, res){
     res.status(200).send(data);
 })
