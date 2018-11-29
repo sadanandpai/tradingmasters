@@ -1,9 +1,14 @@
 <div class="row">
         <div class="col-md-4">
-            <input type="text" type="search" class="form-control" placeholder="Search" ng-model="$ctrl.search" />
+            <input type="text" type="search" class="form-control" placeholder="Search" ng-model="$ctrl.search" ng-change="$ctrl.setPage()" />
         </div>
     
-        <div class="col-md-8 text-right">
+        <div class="col-md-2">
+            <span ng-if="!$ctrl.search">{{$ctrl.stockLength}}</span>
+            <span ng-if="$ctrl.search">{{$ctrl.stockLength}}/{{$ctrl.stocks.length}}</span> stocks
+        </div>
+    
+        <div class="col-md-6 text-right">
             <a href="#!/stocks/addStock" class="btn btn-primary" role="button">Add a stock</a>
         </div>
     </div>
@@ -32,14 +37,14 @@
         </thead>
         
         <tbody>
-                <span ng-if="$ctrl.load">
-                        <div class={{$ctrl.opacity}}></div>
-                    </span>
-            <tr ng-if="!$ctrl.load && !$ctrl.stocks.length">
+            <span ng-if="$ctrl.load">
+                <div class={{$ctrl.opacity}}></div>
+            </span>
+            <tr ng-if="!$ctrl.load && !$ctrl.stockLength">
                 <td colspan="2">{{$ctrl.errorMsg}}</td>
             </tr>
-            <tr ng-show="true" ng-repeat="stock in $ctrl.stocks | filter:$ctrl.search | orderBy: $ctrl.sort : $ctrl.reverse" >
-                <th scope="row">{{$index+1}}</td>
+            <tr ng-show="true" ng-repeat="stock in $ctrl.stocks | filter:$ctrl.search | orderBy: $ctrl.sort : $ctrl.reverse | startFrom: ($ctrl.currentPage-1) * 4 | limitTo: 4" >
+                <th scope="row">{{ ($ctrl.currentPage-1) * 4 + $index + 1}}</td>
                 <td>{{stock.stockName}}</td>
                 <td>{{stock.buyPrice}}</td>
                 <td>{{stock.stopLoss}}</td>
@@ -55,3 +60,6 @@
         </tbody>
     </table>
     
+    <span ng-if="$ctrl.stockLength > 4">
+    <ul uib-pagination total-items="$ctrl.stockLength" items-per-page="4" ng-model="$ctrl.currentPage" ng-change="$ctrl.setPage()" max-size="5" class="pagination-sm" boundary-link-numbers="true"></ul>
+    </span>
