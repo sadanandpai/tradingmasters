@@ -69,8 +69,6 @@ angular.module('stockList')
                 for(var i =1; i<= Math.ceil(self.stockLength / 4); i++)
                     self.stockCount.push(i);
 
-                console.log(self.stockCount);
-
                 if(page)
                     self.currentPage = page;
                 self.lastPage = Math.ceil(self.stockLength / 4);
