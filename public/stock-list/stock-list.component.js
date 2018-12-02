@@ -29,7 +29,7 @@ angular.module('stockList')
             }
 
             
-            $http.get("res/stocklist.json").then(
+            $http.get("https://tradingmasters.herokuapp.com/rest/").then(
                 function(response){
                     self.stocks = response.data;
                 }
