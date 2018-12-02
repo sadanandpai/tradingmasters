@@ -5,11 +5,14 @@ angular.module('stockList')
             var self = this;
             self.load = true;
             self.stocks = [];
+            self.stockCount = [];
             self.sort = 'profit';
             self.reverse = true;
             self.errorMsg = 'No data found';
             self.opacity = "loader";
-            self.currentPage = "1";
+            self.currentPage = 1;
+            self.lastPage = 1;
+            self.myStyle = "{ color: blue }";
 
             this.deleteStock = function deleteStock(index){
                 $http.delete("https://tradingmasters.herokuapp.com/rest/"+index).then(
@@ -26,13 +29,15 @@ angular.module('stockList')
             }
 
             
-            $http.get("https://tradingmasters.herokuapp.com/rest/").then(
+            $http.get("res/stocklist.json").then(
                 function(response){
                     self.stocks = response.data;
                 }
             ).then(function loadCurrentPrice(){
                     var promises = [];
                     self.stockLength = self.stocks.length;
+                    self.setPage();
+
                     self.stocks.forEach(function(stock, index) {          
                         promises.push($http.get("https://www.quandl.com/api/v3/datasets/NSE/" + stock.stockName + ".json?api_key=gwZhGszfyS5bH7p44UfA&rows=1").then(
                             function(response){
@@ -57,10 +62,20 @@ angular.module('stockList')
                 self.errorMsg = "Error while retriving data";
             });
 
-            self.setPage = function(){
-                self.stockLength = $filter('filter')(self.stocks, self.search).length;
+            self.setPage = function(page){
+                var filteredStocks = $filter('filter')(self.stocks, self.search);
+                self.stockLength = filteredStocks.length
+                self.stockCount = [];
+                for(var i =1; i<= Math.ceil(self.stockLength / 4); i++)
+                    self.stockCount.push(i);
+
+                console.log(self.stockCount);
+
+                if(page)
+                    self.currentPage = page;
+                self.lastPage = Math.ceil(self.stockLength / 4);
             }
-                      
+            
         }]
     }
 );

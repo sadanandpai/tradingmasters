@@ -1,6 +1,6 @@
 <div class="row">
         <div class="col-md-4">
-            <input type="text" type="search" class="form-control" placeholder="Search" ng-model="$ctrl.search" ng-change="$ctrl.setPage()" />
+            <input type="text" type="search" class="form-control" placeholder="Search" ng-model="$ctrl.search" ng-change="$ctrl.setPage(1)" />
         </div>
     
         <div class="col-md-2">
@@ -60,4 +60,36 @@
         </tbody>
     </table>
     
-    <ul uib-pagination total-items="$ctrl.stockLength" items-per-page="4" ng-model="$ctrl.currentPage" ng-change="$ctrl.setPage()" max-size="5" class="pagination-sm" boundary-link-numbers="true"></ul>
+    
+    <span ng-if="$ctrl.stockLength > 4">
+    <ul class="pagination">
+        <li ng-class="$ctrl.currentPage <= 1 ? 'page-item disabled' : 'page-item'">
+            <a class="page-link" href="" tabindex="-1" ng-click="$ctrl.currentPage =  $ctrl.currentPage - 1">Previous</a>
+        </li>
+    
+        <li class="page-item" ng-repeat="i in $ctrl.stockCount" ng-class=" i == $ctrl.currentPage ? 'page-item active': ''" href="#">
+    
+            <span ng-if="i == 1 && $ctrl.currentPage > i+1">
+                <a class="page-link" href="" ng-click="$ctrl.currentPage = 1">{{i}}</a>
+            </span>
+    
+            <span ng-if="i > 1 && i == $ctrl.currentPage - 2">
+                <a class="page-link" href="" ng-click="$ctrl.currentPage = $ctrl.currentPage - 2; i = $ctrl.currentPage - 1">..</a>
+            </span>
+            <span ng-if="i == $ctrl.currentPage - 1 || i == $ctrl.currentPage || i == $ctrl.currentPage + 1">
+                <a class="page-link" href="" ng-click="$ctrl.currentPage = i">{{i}}</a>
+            </span>
+            <span ng-if="i < $ctrl.lastPage && i == $ctrl.currentPage + 2">
+                <a class="page-link" href="" ng-click="$ctrl.currentPage = $ctrl.currentPage + 2">..</a>
+            </span>
+    
+            <span ng-if="i == $ctrl.lastPage && $ctrl.currentPage < i-1">
+                <a class="page-link" href="" ng-click="$ctrl.currentPage = i">{{i}}</a>
+            </span>
+        </li>
+       
+        <li ng-class="$ctrl.currentPage >= $ctrl.lastPage ? 'page-item disabled' : 'page-item'">
+            <a class="page-link" href="" ng-click="$ctrl.currentPage = $ctrl.currentPage + 1">Next</a>
+        </li>
+    </ul>
+    </span>
