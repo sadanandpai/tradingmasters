@@ -1,0 +1,14 @@
+<div class="row">
+    <div class="col-md-4">
+        <input type="text" type="search" class="form-control" placeholder="Search" ng-model="search.text" ng-change="search.setPage(1)" />
+    </div>
+
+    <div class="col-md-2">
+        <span ng-if="!search.text">{{search.stockLength}}</span>
+        <span ng-if="search.text">{{search.stockLength}}/{{search.totalStocks}}</span> stocks
+    </div>
+
+    <div class="col-md-6 text-right">
+        <a href="#!/stocks/addStock" class="btn btn-primary" role="button">Add a stock</a>
+    </div>
+</div>

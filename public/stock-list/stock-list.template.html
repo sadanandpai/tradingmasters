@@ -1,95 +1,82 @@
-<div class="row">
-        <div class="col-md-4">
-            <input type="text" type="search" class="form-control" placeholder="Search" ng-model="$ctrl.search" ng-change="$ctrl.setPage(1)" />
-        </div>
+<search-directive info="$ctrl.search"></search-directive>
+<br/>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Index</th>
+            <th scope="col" classs="text-right" ng-click="$ctrl.sort='stockName'; $ctrl.reverse=!$ctrl.reverse">
+                StockName
+                <span class="oi oi-sort-ascending" ng-show="$ctrl.sort=='stockName' && !$ctrl.reverse" ng-class="{reverse: $ctrl.reverse}"></span>
+                <span class="oi oi-sort-descending" ng-show="$ctrl.sort=='stockName' && $ctrl.reverse" ng-class="{reverse: $ctrl.reverse}"></span>
+            </th>
+            <th scope="col">BuyPrice</th>
+            <th scope="col">Stoploss</th>
+            <th scope="col">Target</th>
+            <th scope="col">Current Price</th>
+            <th scope="col" ng-click="$ctrl.sort='profit'; $ctrl.reverse=!$ctrl.reverse">
+                P & L
+                <span class="oi oi-sort-ascending" ng-show="$ctrl.sort=='profit' && !$ctrl.reverse" ng-class="{reverse: $ctrl.reverse}"></span>
+                <span class="oi oi-sort-descending" ng-show="$ctrl.sort=='profit' && $ctrl.reverse" ng-class="{reverse: $ctrl.reverse}"></span>
+            </th>
+            <th scope="col"></th>
+        </tr>
+    </thead>
     
-        <div class="col-md-2">
-            <span ng-if="!$ctrl.search">{{$ctrl.stockLength}}</span>
-            <span ng-if="$ctrl.search">{{$ctrl.stockLength}}/{{$ctrl.stocks.length}}</span> stocks
-        </div>
-    
-        <div class="col-md-6 text-right">
-            <a href="#!/stocks/addStock" class="btn btn-primary" role="button">Add a stock</a>
-        </div>
-    </div>
-    <br/>
-    
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Index</th>
-                <th scope="col" classs="text-right" ng-click="$ctrl.sort='stockName'; $ctrl.reverse=!$ctrl.reverse">
-                    StockName
-                    <span class="oi oi-sort-ascending" ng-show="$ctrl.sort=='stockName' && !$ctrl.reverse" ng-class="{reverse: $ctrl.reverse}"></span>
-                    <span class="oi oi-sort-descending" ng-show="$ctrl.sort=='stockName' && $ctrl.reverse" ng-class="{reverse: $ctrl.reverse}"></span>
-                </th>
-                <th scope="col">BuyPrice</th>
-                <th scope="col">Stoploss</th>
-                <th scope="col">Target</th>
-                <th scope="col">Current Price</th>
-                <th scope="col" ng-click="$ctrl.sort='profit'; $ctrl.reverse=!$ctrl.reverse">
-                    P & L
-                    <span class="oi oi-sort-ascending" ng-show="$ctrl.sort=='profit' && !$ctrl.reverse" ng-class="{reverse: $ctrl.reverse}"></span>
-                    <span class="oi oi-sort-descending" ng-show="$ctrl.sort=='profit' && $ctrl.reverse" ng-class="{reverse: $ctrl.reverse}"></span>
-                </th>
-                <th scope="col"></th>
-            </tr>
-        </thead>
+    <tbody>
+        <span ng-if="$ctrl.load">
+            <div class={{$ctrl.opacity}}></div>
+        </span>
+        <tr ng-if="!$ctrl.load && !$ctrl.search.stockLength">
+            <td colspan="2">{{$ctrl.errorMsg}}</td>
+        </tr>
+        <tr ng-show="true" ng-repeat="stock in $ctrl.stocks | filter:$ctrl.search.text | orderBy: $ctrl.sort : $ctrl.reverse | startFrom: ($ctrl.currentPage-1) * $ctrl.search.pageLimit | limitTo: $ctrl.search.pageLimit" >
+            <th scope="row">{{ ($ctrl.currentPage-1) * $ctrl.search.pageLimit + $index + 1}}</td>
+            <td>{{stock.stockName}}</td>
+            <td>{{stock.buyPrice}}</td>
+            <td>{{stock.stopLoss}}</td>
+            <td>{{stock.target}}</td>
+            <td>{{stock.currentPrice}}</td>
+            <td ng-class="stock.profit > 0 ? 'text-success' : 'text-danger'">{{ stock.profit | number:2 }}%</td>
+            <td>
+                <a href="" ng-click="$ctrl.editStock(stock)"><span class="oi oi-pencil" title="edit" aria-hidden="true"></span></a>&nbsp;&nbsp;&nbsp;
+                <a href="" ng-click="$ctrl.deleteStock(stock.index)"><span class="oi oi-trash" title="delete" aria-hidden="true"></span></a>
+            </td>
+        </tr>
         
-        <tbody>
-            <span ng-if="$ctrl.load">
-                <div class={{$ctrl.opacity}}></div>
-            </span>
-            <tr ng-if="!$ctrl.load && !$ctrl.stockLength">
-                <td colspan="2">{{$ctrl.errorMsg}}</td>
-            </tr>
-            <tr ng-show="true" ng-repeat="stock in $ctrl.stocks | filter:$ctrl.search | orderBy: $ctrl.sort : $ctrl.reverse | startFrom: ($ctrl.currentPage-1) * 4 | limitTo: 4" >
-                <th scope="row">{{ ($ctrl.currentPage-1) * 4 + $index + 1}}</td>
-                <td>{{stock.stockName}}</td>
-                <td>{{stock.buyPrice}}</td>
-                <td>{{stock.stopLoss}}</td>
-                <td>{{stock.target}}</td>
-                <td>{{stock.currentPrice}}</td>
-                <td ng-class="stock.profit > 0 ? 'text-success' : 'text-danger'">{{ stock.profit | number:2 }}%</td>
-                <td>
-                    <a href="" ng-click="$ctrl.editStock(stock)"><span class="oi oi-pencil" title="edit" aria-hidden="true"></span></a>&nbsp;&nbsp;&nbsp;
-                    <a href="" ng-click="$ctrl.deleteStock(stock.index)"><span class="oi oi-trash" title="delete" aria-hidden="true"></span></a>
-                </td>
-            </tr>
-            
-        </tbody>
-    </table>
-    
-    
-    <span ng-if="$ctrl.stockLength > 4">
-    <ul class="pagination">
-        <li ng-class="$ctrl.currentPage <= 1 ? 'page-item disabled' : 'page-item'">
-            <a class="page-link" href="" tabindex="-1" ng-click="$ctrl.currentPage =  $ctrl.currentPage - 1">Previous</a>
-        </li>
-    
-        <li class="page-item" ng-repeat="i in $ctrl.stockCount" ng-class=" i == $ctrl.currentPage ? 'page-item active': ''" href="#">
-    
-            <span ng-if="i == 1 && $ctrl.currentPage > i+1">
-                <a class="page-link" href="" ng-click="$ctrl.currentPage = 1">{{i}}</a>
-            </span>
-    
-            <span ng-if="i > 1 && i == $ctrl.currentPage - 2">
-                <a class="page-link" href="" ng-click="$ctrl.currentPage = $ctrl.currentPage - 2; i = $ctrl.currentPage - 1">..</a>
-            </span>
-            <span ng-if="i == $ctrl.currentPage - 1 || i == $ctrl.currentPage || i == $ctrl.currentPage + 1">
-                <a class="page-link" href="" ng-click="$ctrl.currentPage = i">{{i}}</a>
-            </span>
-            <span ng-if="i < $ctrl.lastPage && i == $ctrl.currentPage + 2">
-                <a class="page-link" href="" ng-click="$ctrl.currentPage = $ctrl.currentPage + 2">..</a>
-            </span>
-    
-            <span ng-if="i == $ctrl.lastPage && $ctrl.currentPage < i-1">
-                <a class="page-link" href="" ng-click="$ctrl.currentPage = i">{{i}}</a>
-            </span>
-        </li>
-       
-        <li ng-class="$ctrl.currentPage >= $ctrl.lastPage ? 'page-item disabled' : 'page-item'">
-            <a class="page-link" href="" ng-click="$ctrl.currentPage = $ctrl.currentPage + 1">Next</a>
-        </li>
-    </ul>
-    </span>
+    </tbody>
+</table>
+
+
+<span ng-if="$ctrl.search.stockLength > $ctrl.search.pageLimit">
+<ul class="pagination">
+    <li ng-class="$ctrl.currentPage <= 1 ? 'page-item disabled' : 'page-item'">
+        <a class="page-link" href="" tabindex="-1" ng-click="$ctrl.currentPage =  $ctrl.currentPage - 1">Previous</a>
+    </li>
+
+    <li class="page-item" ng-repeat="i in $ctrl.search.stockCount" ng-class=" i == $ctrl.currentPage ? 'page-item active': ''" href="#">
+
+        <span ng-if="i == 1 && $ctrl.currentPage > i+1">
+            <a class="page-link" href="" ng-click="$ctrl.currentPage = 1">{{i}}</a>
+        </span>
+
+        <span ng-if="i > 1 && i == $ctrl.currentPage - 2">
+            <a class="page-link" href="" ng-click="$ctrl.currentPage = $ctrl.currentPage - 2; i = $ctrl.currentPage - 1">..</a>
+        </span>
+        <span ng-if="i == $ctrl.currentPage - 1 || i == $ctrl.currentPage || i == $ctrl.currentPage + 1">
+            <a class="page-link" href="" ng-click="$ctrl.currentPage = i">{{i}}</a>
+        </span>
+        <span ng-if="i < $ctrl.lastPage && i == $ctrl.currentPage + 2">
+            <a class="page-link" href="" ng-click="$ctrl.currentPage = $ctrl.currentPage + 2">..</a>
+        </span>
+
+        <span ng-if="i == $ctrl.lastPage && $ctrl.currentPage < i-1">
+            <a class="page-link" href="" ng-click="$ctrl.currentPage = i">{{i}}</a>
+        </span>
+    </li>
+   
+    <li ng-class="$ctrl.currentPage >= $ctrl.lastPage ? 'page-item disabled' : 'page-item'">
+        <a class="page-link" href="" ng-click="$ctrl.currentPage = $ctrl.currentPage + 1">Next</a>
+    </li>
+</ul>
+</span>

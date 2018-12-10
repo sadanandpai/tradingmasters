@@ -1,1 +1,4 @@
-angular.module('stockList', [])
+angular.module('stockList', [
+    'stockService',
+    'searchStocks'
+])
