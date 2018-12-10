@@ -49,8 +49,7 @@ angular.module('stockList')
 
             //To set the page
             function setPage(page){
-                var filteredStocks = $filter('filter')(self.stocks, self.search.text);
-                self.search.stockLength = filteredStocks.length
+                self.search.stockLength = $filter('filter')(self.stocks, self.search.text).length;
                 self.search.stockCount = [];
                 for(var i =1; i<= Math.ceil(self.search.stockLength / self.search.pageLimit); i++)
                     self.search.stockCount.push(i);

@@ -7,6 +7,7 @@ angular.module('stockService', [])
             return $http.get(url).then(
                 function(response){
                     self.stocks = response.data;
+                    self.search.totalStocks = self.stocks.length;
                 },
                 function(response){
                     console.log("Error while fetching the stocks");
